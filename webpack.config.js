@@ -70,7 +70,7 @@ module.exports = {
     }),
     new ConcatenatePlugin({
       source: "./dist",
-      destination: "../assets",
+      destination: "./assets",
       name: 'SchedulerComponent.js',
       ignore: 'main.js'
     }),
