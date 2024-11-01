@@ -38,7 +38,7 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-    - run: cd schedulerComponent && npm install
+    - run: npm install
     - run: npm run build 
 
 
