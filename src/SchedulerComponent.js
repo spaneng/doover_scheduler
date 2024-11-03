@@ -1397,7 +1397,7 @@ export default class RemoteComponent extends RemoteAccess {
                                 ))
                             ) : (
                                 <Box>
-                                    <Typography variant="h5">No {mainParams.timeslotNamePlural} scheduled</Typography>
+                                    <Typography variant="h5">No {mainParams.timeslotNamePlural} scheduled.</Typography>
                                 </Box>
                             )}
                         </Grid>
