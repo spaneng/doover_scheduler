@@ -877,8 +877,29 @@ export default class RemoteComponent extends RemoteAccess {
             if (schedules) {
                 return schedules.aggregate.payload;
             } else {
-                console.log("Schedule channel doesn't exist yet!");
-                return null;
+                // Publish to create the channel if it doesn't exist
+    
+                const initialPayload = {
+                    "main_params": {
+                        "schedule_name_single": "Schedule",
+                        "schedule_name_plural": "Schedule",
+                        "timeslot_name_single": "Timeslot",
+                        "timeslot_name_plural": "Timeslots"
+                      },
+                    modes: [],
+                    schedules: []
+                };
+    
+                await window.dooverDataAPIWrapper.post_channel_aggregate(
+                    {
+                        agent_id: agent_id,
+                        channel_name: 'schedules',
+                    },
+                    JSON.stringify(initialPayload),
+                    token.token
+                );
+    
+                return initialPayload;
             }
         } catch (err) {
             console.error('ERROR:', err);
