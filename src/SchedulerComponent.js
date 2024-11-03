@@ -874,7 +874,12 @@ export default class RemoteComponent extends RemoteAccess {
                 },
                 token.token
             );
-            return schedules.aggregate.payload;
+            if (schedules.aggregate.payload) {
+                return schedules.aggregate.payload;
+            } else {
+                console.log("Schedule channel doesn't exist yet!");
+                return null;
+            }
         } catch (err) {
             console.error('ERROR:', err);
             this.setState({ loading: false });
