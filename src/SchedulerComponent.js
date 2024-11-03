@@ -874,7 +874,7 @@ export default class RemoteComponent extends RemoteAccess {
                 },
                 token.token
             );
-            if (schedules.aggregate) {
+            if (schedules) {
                 return schedules.aggregate.payload;
             } else {
                 console.log("Schedule channel doesn't exist yet!");
@@ -1397,7 +1397,7 @@ export default class RemoteComponent extends RemoteAccess {
                                 ))
                             ) : (
                                 <Box>
-                                    <Typography variant="h5">No {mainParams.timeslotNamePlural} scheduled.</Typography>
+                                    <Typography variant="h5">No {mainParams.timeslotNamePlural} scheduled</Typography>
                                 </Box>
                             )}
                         </Grid>
