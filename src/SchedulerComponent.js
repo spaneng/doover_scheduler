@@ -874,7 +874,33 @@ export default class RemoteComponent extends RemoteAccess {
                 },
                 token.token
             );
-            return schedules.aggregate.payload;
+            if (schedules) {
+                return schedules.aggregate.payload;
+            } else {
+                // Publish to create the channel if it doesn't exist
+    
+                const initialPayload = {
+                    "main_params": {
+                        "schedule_name_single": "Schedule",
+                        "schedule_name_plural": "Schedule",
+                        "timeslot_name_single": "Timeslot",
+                        "timeslot_name_plural": "Timeslots"
+                      },
+                    modes: [],
+                    schedules: []
+                };
+    
+                await window.dooverDataAPIWrapper.post_channel_aggregate(
+                    {
+                        agent_id: agent_id,
+                        channel_name: 'schedules',
+                    },
+                    JSON.stringify(initialPayload),
+                    token.token
+                );
+    
+                return initialPayload;
+            }
         } catch (err) {
             console.error('ERROR:', err);
             this.setState({ loading: false });
@@ -1392,6 +1418,7 @@ export default class RemoteComponent extends RemoteAccess {
                                                     color: '#FFFFFF',
                                                     minWidth: '48%',
                                                     width: '48%',
+                                                    marginTop: '-4px',
                                                     '&:hover': {
                                                         backgroundColor: '#FFA000'
                                                     }
@@ -1407,6 +1434,7 @@ export default class RemoteComponent extends RemoteAccess {
                                                     color: '#FFFFFF',
                                                     minWidth: '48%',
                                                     width: '48%',
+                                                    marginTop: '-4px',
                                                     '&:hover': {
                                                         backgroundColor: '#D32F2F'
                                                     }

@@ -17,7 +17,11 @@ var SchedulerComponent;
   \***********************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
+<<<<<<< HEAD
 eval("var moduleMap = {\n\t\"./SchedulerComponent\": () => {\n\t\treturn Promise.all([__webpack_require__.e(\"vendors-node_modules_mui_icons-material_Edit_js-node_modules_mui_icons-material_RemoveCircle_-d5a9a2\"), __webpack_require__.e(\"src_SchedulerComponent_js-webpack_sharing_consume_default_react_react-webpack_sharing_consume-8537bd\")]).then(() => (() => ((__webpack_require__(/*! ./src/SchedulerComponent */ \"./src/SchedulerComponent.js\")))));\n\t}\n};\nvar get = (module, getScope) => {\n\t__webpack_require__.R = getScope;\n\tgetScope = (\n\t\t__webpack_require__.o(moduleMap, module)\n\t\t\t? moduleMap[module]()\n\t\t\t: Promise.resolve().then(() => {\n\t\t\t\tthrow new Error('Module \"' + module + '\" does not exist in container.');\n\t\t\t})\n\t);\n\t__webpack_require__.R = undefined;\n\treturn getScope;\n};\nvar init = (shareScope, initScope) => {\n\tif (!__webpack_require__.S) return;\n\tvar name = \"default\"\n\tvar oldScope = __webpack_require__.S[name];\n\tif(oldScope && oldScope !== shareScope) throw new Error(\"Container initialization failed as it has already been initialized with a different share scope\");\n\t__webpack_require__.S[name] = shareScope;\n\treturn __webpack_require__.I(name, initScope);\n};\n\n// This exports getters to disallow modifications\n__webpack_require__.d(exports, {\n\tget: () => (get),\n\tinit: () => (init)\n});\n\n//# sourceURL=webpack://simple-remote-component/container_entry?");
+=======
+eval("var moduleMap = {\n\t\"./SchedulerComponent\": () => {\n\t\treturn Promise.all([__webpack_require__.e(\"vendors-node_modules_mui_icons-material_Edit_js-node_modules_mui_icons-material_RemoveCircle_-d5a9a2\"), __webpack_require__.e(\"src_SchedulerComponent_js-webpack_sharing_consume_default_node_modules_react-dom_node_modules-dd6080\")]).then(() => (() => ((__webpack_require__(/*! ./src/SchedulerComponent */ \"./src/SchedulerComponent.js\")))));\n\t}\n};\nvar get = (module, getScope) => {\n\t__webpack_require__.R = getScope;\n\tgetScope = (\n\t\t__webpack_require__.o(moduleMap, module)\n\t\t\t? moduleMap[module]()\n\t\t\t: Promise.resolve().then(() => {\n\t\t\t\tthrow new Error('Module \"' + module + '\" does not exist in container.');\n\t\t\t})\n\t);\n\t__webpack_require__.R = undefined;\n\treturn getScope;\n};\nvar init = (shareScope, initScope) => {\n\tif (!__webpack_require__.S) return;\n\tvar name = \"default\"\n\tvar oldScope = __webpack_require__.S[name];\n\tif(oldScope && oldScope !== shareScope) throw new Error(\"Container initialization failed as it has already been initialized with a different share scope\");\n\t__webpack_require__.S[name] = shareScope;\n\treturn __webpack_require__.I(name, initScope);\n};\n\n// This exports getters to disallow modifications\n__webpack_require__.d(exports, {\n\tget: () => (get),\n\tinit: () => (init)\n});\n\n//# sourceURL=webpack://simple-remote-component/container_entry?");
+>>>>>>> 0df2c82fcdd72bf3e47dcf830f43c5fb5be3265e
 
 /***/ }),
 
@@ -212,7 +216,11 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 	/* webpack/runtime/remotes loading */
 /******/ 	(() => {
 /******/ 		var chunkMapping = {
+<<<<<<< HEAD
 /******/ 			"src_SchedulerComponent_js-webpack_sharing_consume_default_react_react-webpack_sharing_consume-8537bd": [
+=======
+/******/ 			"src_SchedulerComponent_js-webpack_sharing_consume_default_node_modules_react-dom_node_modules-dd6080": [
+>>>>>>> 0df2c82fcdd72bf3e47dcf830f43c5fb5be3265e
 /******/ 				"webpack/container/remote/doover_home/RemoteAccess"
 /******/ 			]
 /******/ 		};
@@ -309,8 +317,13 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 			var promises = [];
 /******/ 			switch(name) {
 /******/ 				case "default": {
+<<<<<<< HEAD
 /******/ 					register("./node_modules/react-dom", "0", () => (() => (Object(function webpackMissingModule() { var e = new Error("Cannot find module './node_modules/react-dom'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()))));
 /******/ 					register("react", "18.3.1", () => (__webpack_require__.e("vendors-node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! ../node_modules/react/index.js */ "../node_modules/react/index.js"))))));
+=======
+/******/ 					register("./node_modules/react-dom", "0", () => (Promise.all([__webpack_require__.e("vendors-node_modules_react-dom_index_js"), __webpack_require__.e("webpack_sharing_consume_default_react_react")]).then(() => (() => (__webpack_require__(/*! ./node_modules/react-dom */ "./node_modules/react-dom/index.js"))))));
+/******/ 					register("react", "18.3.1", () => (__webpack_require__.e("vendors-node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! ./node_modules/react/index.js */ "./node_modules/react/index.js"))))));
+>>>>>>> 0df2c82fcdd72bf3e47dcf830f43c5fb5be3265e
 /******/ 					initExternal("webpack/container/reference/doover_home");
 /******/ 				}
 /******/ 				break;
@@ -468,6 +481,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 		});
 /******/ 		var installedModules = {};
 /******/ 		var moduleToHandlerMapping = {
+<<<<<<< HEAD
 /******/ 			"webpack/sharing/consume/default/react/react?e9c8": () => (loadSingletonVersion("default", "react", false, [1,18,2,0], () => (__webpack_require__.e("vendors-node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! react */ "../node_modules/react/index.js"))))))),
 /******/ 			"webpack/sharing/consume/default/react/react?429b": () => (loadSingleton("default", "react", false, () => (__webpack_require__.e("vendors-node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! react */ "../node_modules/react/index.js"))))))),
 /******/ 			"webpack/sharing/consume/default/react/react?c387": () => (loadSingletonVersion("default", "react", false, [0,16,8,0], () => (__webpack_require__.e("vendors-node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! react */ "../node_modules/react/index.js"))))))),
@@ -484,6 +498,28 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 				"webpack/sharing/consume/default/react/react?98f9",
 /******/ 				"webpack/sharing/consume/default/react/react?167c",
 /******/ 				"webpack/sharing/consume/default/react/react?0abc"
+=======
+/******/ 			"webpack/sharing/consume/default/react/react?c673": () => (loadSingletonVersion("default", "react", false, [1,18,3,1], () => (__webpack_require__.e("vendors-node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! react */ "./node_modules/react/index.js"))))))),
+/******/ 			"webpack/sharing/consume/default/react/react?c217": () => (loadSingletonVersion("default", "react", false, [1,18,2,0], () => (__webpack_require__.e("vendors-node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! react */ "./node_modules/react/index.js"))))))),
+/******/ 			"webpack/sharing/consume/default/react/react?4a07": () => (loadSingleton("default", "react", false, () => (__webpack_require__.e("vendors-node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! react */ "./node_modules/react/index.js"))))))),
+/******/ 			"webpack/sharing/consume/default/react/react?28ef": () => (loadSingletonVersion("default", "react", false, [0,16,8,0], () => (__webpack_require__.e("vendors-node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! react */ "./node_modules/react/index.js"))))))),
+/******/ 			"webpack/sharing/consume/default/react/react?a82b": () => (loadSingletonVersion("default", "react", false, [,[1,18,0,0],[1,17,0,0],1], () => (__webpack_require__.e("vendors-node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! react */ "./node_modules/react/index.js"))))))),
+/******/ 			"webpack/sharing/consume/default/react/react?a275": () => (loadSingletonVersion("default", "react", false, [0,16,6,0], () => (__webpack_require__.e("vendors-node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! react */ "./node_modules/react/index.js"))))))),
+/******/ 			"webpack/sharing/consume/default/./node_modules/react-dom/./node_modules/react-dom": () => (loadSingleton("default", "./node_modules/react-dom", false, () => (Promise.all([__webpack_require__.e("vendors-node_modules_react-dom_index_js"), __webpack_require__.e("webpack_sharing_consume_default_react_react")]).then(() => (() => (__webpack_require__(/*! ./node_modules/react-dom */ "./node_modules/react-dom/index.js")))))))
+/******/ 		};
+/******/ 		// no consumes in initial chunks
+/******/ 		var chunkMapping = {
+/******/ 			"webpack_sharing_consume_default_react_react": [
+/******/ 				"webpack/sharing/consume/default/react/react?c673"
+/******/ 			],
+/******/ 			"src_SchedulerComponent_js-webpack_sharing_consume_default_node_modules_react-dom_node_modules-dd6080": [
+/******/ 				"webpack/sharing/consume/default/react/react?c217",
+/******/ 				"webpack/sharing/consume/default/react/react?4a07",
+/******/ 				"webpack/sharing/consume/default/react/react?28ef",
+/******/ 				"webpack/sharing/consume/default/react/react?a82b",
+/******/ 				"webpack/sharing/consume/default/react/react?a275",
+/******/ 				"webpack/sharing/consume/default/./node_modules/react-dom/./node_modules/react-dom"
+>>>>>>> 0df2c82fcdd72bf3e47dcf830f43c5fb5be3265e
 /******/ 			]
 /******/ 		};
 /******/ 		var startedInstallModules = {};
@@ -539,7 +575,11 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 					if(installedChunkData) {
 /******/ 						promises.push(installedChunkData[2]);
 /******/ 					} else {
+<<<<<<< HEAD
 /******/ 						if(true) { // all chunks have JS
+=======
+/******/ 						if("webpack_sharing_consume_default_react_react" != chunkId) {
+>>>>>>> 0df2c82fcdd72bf3e47dcf830f43c5fb5be3265e
 /******/ 							// setup Promise in chunk cache
 /******/ 							var promise = new Promise((resolve, reject) => (installedChunkData = installedChunks[chunkId] = [resolve, reject]));
 /******/ 							promises.push(installedChunkData[2] = promise);
@@ -564,7 +604,11 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 								}
 /******/ 							};
 /******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
+<<<<<<< HEAD
 /******/ 						}
+=======
+/******/ 						} else installedChunks[chunkId] = 0;
+>>>>>>> 0df2c82fcdd72bf3e47dcf830f43c5fb5be3265e
 /******/ 					}
 /******/ 				}
 /******/ 		};
