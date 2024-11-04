@@ -1389,6 +1389,7 @@ export default class RemoteComponent extends RemoteAccess {
                                                     color: '#FFFFFF',
                                                     minWidth: '48%',
                                                     width: '48%',
+                                                    marginTop: '-2px',
                                                     '&:hover': {
                                                         backgroundColor: '#FFA000'
                                                     }
@@ -1404,6 +1405,7 @@ export default class RemoteComponent extends RemoteAccess {
                                                     color: '#FFFFFF',
                                                     minWidth: '48%',
                                                     width: '48%',
+                                                    marginTop: '-2px',
                                                     '&:hover': {
                                                         backgroundColor: '#D32F2F'
                                                     }
