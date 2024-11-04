@@ -288,7 +288,7 @@ export default class RemoteComponent extends RemoteAccess {
     formatModeObject = () => {
         const { selectedMode, modeParams } = this.state;
         const modeObject = { type: selectedMode };
-        
+    
         const selectedModeObj = this.state.modes.find(mode => mode.name === selectedMode);
         if (selectedModeObj && selectedModeObj.params) {
             selectedModeObj.params.forEach(param => {
@@ -297,9 +297,9 @@ export default class RemoteComponent extends RemoteAccess {
                 }
             });
         }
-
+    
         return modeObject;
-    }
+    };
 
     pushChanges = () => {
         const apiWrapper = window.dooverDataAPIWrapper;
@@ -992,15 +992,51 @@ export default class RemoteComponent extends RemoteAccess {
             });
     }
 
+    renderParamInput = (param) => {
+        const { modeParams } = this.state;
+        const paramValue = modeParams[param.name] !== undefined ? modeParams[param.name] : param.min;
+    
+        switch (param.input) {
+            case 'slider':
+                return (
+                    <Slider
+                        value={paramValue}
+                        onChange={(_, value) => this.handleParamChange(param.name, value)}
+                        min={param.min}
+                        max={param.max}
+                        step={0.01}
+                        valueLabelDisplay="on"
+                    />
+                );
+            case 'number':
+                return (
+                    <TextField
+                        type="number"
+                        value={paramValue}
+                        onChange={(e) => this.handleParamChange(param.name, parseFloat(e.target.value))}
+                        inputProps={{
+                            min: param.min,
+                            max: param.max,
+                            step: 0.01,
+                        }}
+                        fullWidth
+                    />
+                );
+            // Add more cases here if you have other input types
+            default:
+                return null;
+        }
+    };
+
     renderModeSelection = () => {
         const { modes, selectedMode, modeParams } = this.state;
-
+    
         if (modes.length === 0) {
             return null;
         }
-
+    
         const selectedModeObj = modes.find(mode => mode.name === selectedMode);
-
+    
         return (
             <FormControl component="fieldset" fullWidth margin="normal">
                 <FormLabel component="legend">Mode</FormLabel>
@@ -1018,7 +1054,7 @@ export default class RemoteComponent extends RemoteAccess {
                         />
                     ))}
                 </RadioGroup>
-
+    
                 {selectedModeObj && selectedModeObj.params.length > 0 && (
                     <Box mt={2}>
                         {selectedModeObj.params.map(param => (
@@ -1026,14 +1062,7 @@ export default class RemoteComponent extends RemoteAccess {
                                 <Typography gutterBottom>
                                     {param.display_name}
                                 </Typography>
-                                <Slider
-                                    value={modeParams[param.name] !== undefined ? modeParams[param.name] : param.min}
-                                    onChange={(_, value) => this.handleParamChange(param.name, value)}
-                                    min={param.min}
-                                    max={param.max}
-                                    step={0.01}
-                                    valueLabelDisplay="on"
-                                />
+                                {this.renderParamInput(param)}
                             </Box>
                         ))}
                     </Box>
