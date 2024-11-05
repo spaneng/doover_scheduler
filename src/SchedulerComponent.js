@@ -1020,35 +1020,43 @@ export default class RemoteComponent extends RemoteAccess {
 
     renderParamInput = (param) => {
         const { modeParams } = this.state;
-        const paramValue = modeParams[param.name] !== undefined ? modeParams[param.name] : param.min;
+        const paramValue = modeParams[param.name] !== undefined ? modeParams[param.name] : (param.defaultValue !== undefined ? param.defaultValue : '');
     
         switch (param.input) {
             case 'slider':
+                // For sliders, min and max are required. If they are optional, you'd need to set defaults or handle accordingly.
                 return (
                     <Slider
                         value={paramValue}
                         onChange={(_, value) => this.handleParamChange(param.name, value)}
-                        min={param.min}
-                        max={param.max}
-                        step={0.01}
+                        min={param.min !== undefined ? param.min : 0} // Default to 0 if min is undefined
+                        max={param.max !== undefined ? param.max : 100} // Default to 100 if max is undefined
+                        step={param.step || 0.01}
                         valueLabelDisplay="on"
                     />
                 );
             case 'number':
+                const inputProps = {
+                    step: param.step || 0.01,
+                };
+    
+                if (param.min !== undefined) {
+                    inputProps.min = param.min;
+                }
+                if (param.max !== undefined) {
+                    inputProps.max = param.max;
+                }
+    
                 return (
                     <TextField
                         type="number"
                         value={paramValue}
-                        onChange={(e) => this.handleParamChange(param.name, parseFloat(e.target.value))}
-                        inputProps={{
-                            min: param.min,
-                            max: param.max,
-                            step: 0.01,
-                        }}
+                        onChange={(e) => this.handleParamChange(param.name, e.target.value)}
+                        inputProps={inputProps}
                         fullWidth
                     />
                 );
-            // Add more cases here if you have other input types
+            // You can add more cases for other input types
             default:
                 return null;
         }
