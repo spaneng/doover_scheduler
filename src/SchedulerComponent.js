@@ -95,6 +95,7 @@ export default class RemoteComponent extends RemoteAccess {
             endDateError: "",
             editError: "",
             hasModes: false,
+            modeError: "",
         };
         this.updateUiStates = this.updateUiStates.bind(this);
     }
@@ -116,7 +117,14 @@ export default class RemoteComponent extends RemoteAccess {
     };
 
     handleClose = () => {
-        this.setState({ open: false, startDateError: "", endDateError: ""  });
+        const { modes, selectedMode } = this.state;
+    
+        if (modes.length > 0 && !selectedMode) {
+            this.setState({ modeError: "please select a mode" });
+            return;
+        }
+    
+        this.setState({ open: false, startDateError: "", endDateError: "", modeError: '' });
     };
 
     extractModeParams = (mode) => {
@@ -175,7 +183,7 @@ export default class RemoteComponent extends RemoteAccess {
     };
 
     handleEditClose = () => {
-        this.setState({ editOpen: false, editError: "" });
+        this.setState({ editOpen: false, editError: "", modeError: "" });
     };
 
     handleDeleteOpen = (index) => {
@@ -381,9 +389,14 @@ export default class RemoteComponent extends RemoteAccess {
     };
 
     handleSave = () => {
-        const { startDate, endDate, duration, frequency, scheduleName, mode, schedules } = this.state;
+        const { startDate, endDate, duration, frequency, scheduleName, mode, schedules, modes, selectedMode } = this.state;
         const now = new Date();
         const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+
+        if (modes.length > 0 && !selectedMode) {
+            this.setState({ modeError: "please select a mode" });
+            return;
+        }
     
         if (startDate < twentyFourHoursAgo) {
             this.setState({ startDateError: "Start date cannot be more than 24 hours in the past." });
@@ -395,7 +408,7 @@ export default class RemoteComponent extends RemoteAccess {
             return;
         }
     
-        this.setState({ startDateError: "", endDateError: "" });
+        this.setState({ startDateError: "", endDateError: "", modeError: "" });
     
         if (frequency === 'once') {
             const checkStart = startDate.getTime();
@@ -612,8 +625,13 @@ export default class RemoteComponent extends RemoteAccess {
     
         // this.setState({ editError: ""});
 
-        const { startDate, endDate, duration, editIndex, sortedTimeSlots, sortedSchedules, toggleView, editFrequency, selectedMode, modeParams, editScheduleName } = this.state;
+        const { startDate, endDate, duration, editIndex, sortedTimeSlots, sortedSchedules, toggleView, editFrequency, selectedMode, modeParams, editScheduleName, modes } = this.state;
         const modeObject = this.formatModeObject();
+
+        if (modes.length > 0 && !selectedMode) {
+            this.setState({ modeError: "please select a mode" });
+            return;
+        }
 
         if (toggleView === 'Timeslots') {
 
@@ -731,6 +749,7 @@ export default class RemoteComponent extends RemoteAccess {
                 });
             }
         }
+        this.setState({ modeError: '' });
     };
 
 
@@ -1227,6 +1246,9 @@ export default class RemoteComponent extends RemoteAccess {
                             </FormControl>
                         )}
                         {this.renderModeSelection()}
+                        {this.state.modeError && (
+                            <Typography color="error" align="center">{this.state.modeError}</Typography>
+                        )}
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={this.handleClose} color="primary">
@@ -1304,6 +1326,9 @@ export default class RemoteComponent extends RemoteAccess {
                             />
                         </FormControl>
                         {this.renderModeSelection()}
+                        {this.state.modeError && (
+                            <Typography color="error" align="center">{this.state.modeError}</Typography>
+                        )}
                     </DialogContent>
                     {this.state.editError && (
                                 <Typography color="error">{this.state.editError}</Typography>
