@@ -1383,7 +1383,7 @@ export default class RemoteComponent extends RemoteAccess {
                     <div>
                         <Grid container spacing={0.5} justifyContent="center" marginTop={2} padding="5px">
                             <Grid item xs={4}>
-                                <Typography variant="h6" align="center" sx={{ backgroundColor: '#eaeff1', color: '#222', borderRadius: '5px' }}>Start Time.</Typography>
+                                <Typography variant="h6" align="center" sx={{ backgroundColor: '#eaeff1', color: '#222', borderRadius: '5px' }}>Start Time..</Typography>
                             </Grid>
 
                             <Grid item xs={4}>
