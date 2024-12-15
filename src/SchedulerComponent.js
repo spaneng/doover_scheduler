@@ -1206,8 +1206,8 @@ export default class RemoteComponent extends RemoteAccess {
                                 />
                             </Box>
                         </FormControl>
-                        <Box display="flex" alignItems="center">
-                            <FormControl component="fieldset" margin="normal" sx={{ flex: '1 1 auto' }}>
+                        <Box>
+                            <FormControl component="fieldset" margin="normal" fullWidth>
                                 <FormLabel component="legend" sx={{ color: '#000000', '&.Mui-focused': { color: '#000000' } }}>Frequency</FormLabel>
                                 <RadioGroup
                                     name="frequency"
