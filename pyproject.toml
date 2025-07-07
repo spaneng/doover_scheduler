@@ -1,0 +1,29 @@
+[project]
+name = "doover-scheduler"
+authors = [{ name = "Doover Team", email = "developers@doover.com" }]
+description = "Python package for managing Doover scheduled tasks."
+readme = "README.md"
+version = "0.1.0"
+requires-python = ">=3.11"
+keywords = ["doover-scheduler", "scheduler", "doover"]
+classifiers = [
+    'Development Status :: 4 - Beta',
+    'Programming Language :: Python',
+    'Intended Audience :: Developers',
+    "Natural Language :: English",
+    "Operating System :: OS Independent"
+]
+
+dependencies = [
+    "pydoover>=0.4.10",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "grpcio==1.65.1",
+    "protobuf>=6.31.1",
+]
