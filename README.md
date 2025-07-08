@@ -68,7 +68,6 @@ from pydoover.docker import Application
 class MyApp(Application):
     async def setup(self):
         self.scheduler = doover_scheduler.ScheduleController(self.device_agent)
-        self.scheduler.register(self.on_schedule_start, self.on_schedule_end, self.on_schedule_update)
         await self.scheduler.setup()
         
         # add a UI component to the application for the scheduler
