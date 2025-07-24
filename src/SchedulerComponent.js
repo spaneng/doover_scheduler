@@ -893,32 +893,65 @@ export default class RemoteComponent extends RemoteAccess {
                 },
                 token.token
             );
-            if (schedules) {
-                return schedules.aggregate.payload;
+            
+            // Define the default payload structure
+            const defaultPayload = {
+                main_params: {
+                    schedule_name_single: "Schedule",
+                    schedule_name_plural: "Schedules",
+                    timeslot_name_single: "Timeslot",
+                    timeslot_name_plural: "Timeslots"
+                },
+                modes: [],
+                schedules: []
+            };
+
+            console.log("schedules", schedules);
+            
+            // Check if channel exists and has valid payload
+            if (schedules && schedules.aggregate && schedules.aggregate.payload) {
+                const payload = schedules.aggregate.payload;
+                
+                // Check if payload is empty object or missing required properties
+                if (Object.keys(payload).length === 0 || 
+                    !payload.hasOwnProperty('modes') || 
+                    !payload.hasOwnProperty('schedules') || 
+                    !payload.hasOwnProperty('main_params')) {
+                    
+                    // Payload exists but is incomplete, merge with defaults
+                    const mergedPayload = {
+                        main_params: payload.main_params || defaultPayload.main_params,
+                        modes: Array.isArray(payload.modes) ? payload.modes : defaultPayload.modes,
+                        schedules: Array.isArray(payload.schedules) ? payload.schedules : defaultPayload.schedules
+                    };
+                    
+                    // Update the channel with the corrected payload
+                    await window.dooverDataAPIWrapper.post_channel_aggregate(
+                        {
+                            agent_id: agent_id,
+                            channel_name: 'schedules',
+                        },
+                        JSON.stringify(mergedPayload),
+                        token.token
+                    );
+                    
+                    return mergedPayload;
+                } else {
+                    // Payload is valid, return as-is
+                    return payload;
+                }
             } else {
-                // Publish to create the channel if it doesn't exist
-    
-                const initialPayload = {
-                    "main_params": {
-                        "schedule_name_single": "Schedule",
-                        "schedule_name_plural": "Schedule",
-                        "timeslot_name_single": "Timeslot",
-                        "timeslot_name_plural": "Timeslots"
-                      },
-                    modes: [],
-                    schedules: []
-                };
-    
+                // Channel doesn't exist or has no payload, create it
                 await window.dooverDataAPIWrapper.post_channel_aggregate(
                     {
                         agent_id: agent_id,
                         channel_name: 'schedules',
                     },
-                    JSON.stringify(initialPayload),
+                    JSON.stringify(defaultPayload),
                     token.token
                 );
-    
-                return initialPayload;
+                
+                return defaultPayload;
             }
         } catch (err) {
             console.error('ERROR:', err);
@@ -1143,8 +1176,12 @@ export default class RemoteComponent extends RemoteAccess {
         const totalPages = Math.ceil(sortedRows.length / PAGE_SLOT_MAX);
 
         return (
-            <Box>
-                <Box display="flex" justifyContent="space-between" alignItems="center" position="relative" >
+            <Box 
+                width="95%"
+                margin="auto"
+                overflowX="auto"
+            >
+                <Box display="flex" justifyContent="space-between" alignItems="center" position="relative" padding="5px" width="100%" >
                     <Button variant="contained" color="primary" onClick={this.handleClickOpen} sx={{ height: "50px", margin: "0px" }}>
                         Create {mainParams.scheduleNameSingle}
                     </Button>
@@ -1381,20 +1418,19 @@ export default class RemoteComponent extends RemoteAccess {
                     </DialogActions>
                 </Dialog>
                     <div>
-                        <Grid container spacing={0.5} justifyContent="center" marginTop={2} padding="5px">
-                            <Grid item xs={4}>
+                        <Grid container spacing={0.5} justifyContent="center" marginTop={1} padding="5px" marginLeft="-2px!important">
+                            <Grid item xs={4} sx={{ paddingTop: '0px !important', paddingLeft: '0px !important' }}>
                                 <Typography variant="h6" align="center" sx={{ backgroundColor: '#eaeff1', color: '#222', borderRadius: '5px' }}>Start Time</Typography>
                             </Grid>
-
-                            <Grid item xs={4}>
+                            <Grid item xs={4} sx={{ paddingTop: '0px !important' }}>
                                 <Typography variant="h6" align="center" sx={{ backgroundColor: '#eaeff1', color: '#222', borderRadius: '5px' }}>
                                 {toggleView === 'Timeslots' && hasModes ? 'Mode' : mainParams.scheduleNameSingle}
                                 </Typography>
                             </Grid>
-                            <Grid item xs={2}>
+                            <Grid item xs={2} sx={{ paddingTop: '0px !important' }}>
                                 <Typography variant="h6" align="center" sx={{ backgroundColor: '#eaeff1', color: '#222', borderRadius: '5px' }}>hrs</Typography>
                             </Grid>
-                            <Grid item xs={2}>
+                            <Grid item xs={2} sx={{ paddingTop: '0px !important' }}>
                                 <Typography variant="h6" align="center" sx={{ backgroundColor: '#eaeff1', color: '#222', borderRadius: '5px' }}>Action</Typography>
                             </Grid>
                             {currentPageSlots.length > 0 ? (
@@ -1406,7 +1442,9 @@ export default class RemoteComponent extends RemoteAccess {
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        minHeight: '40px' // Adjust this value as needed
+                                        minHeight: '40px',
+                                        paddingTop: '0px !important',
+                                        borderRadius: '4px 0 0 4px'
                                     }}>
                                         <Typography align="center">{this.formatDateTime(slot.startTime)}</Typography>
                                     </Grid>
@@ -1415,7 +1453,8 @@ export default class RemoteComponent extends RemoteAccess {
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        minHeight: '40px' // Adjust this value as needed
+                                        minHeight: '40px',
+                                        paddingTop: '0px !important'
                                     }}>
                                         <Typography align="center">
                                             {
@@ -1432,7 +1471,8 @@ export default class RemoteComponent extends RemoteAccess {
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        minHeight: '40px' // Adjust this value as needed
+                                        minHeight: '40px',
+                                        paddingTop: '0px !important'
                                     }}>
                                         <Typography align="center">{slot.duration}</Typography>
                                     </Grid>
@@ -1441,9 +1481,11 @@ export default class RemoteComponent extends RemoteAccess {
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        minHeight: '40px' // Adjust this value as needed
+                                        minHeight: '40px',
+                                        paddingTop: '0px !important',
+                                        borderRadius: '0 4px 4px 0'
                                     }}>
-                                        <Box display="flex" justifyContent="space-between" width="100%">
+                                        <Box display="flex" justifyContent="space-between" alignItems="center!important" width="100%">
                                             <Button
                                                 variant="contained"
                                                 sx={{
@@ -1451,7 +1493,6 @@ export default class RemoteComponent extends RemoteAccess {
                                                     color: '#FFFFFF',
                                                     minWidth: '48%',
                                                     width: '48%',
-                                                    marginTop: '-4px',
                                                     '&:hover': {
                                                         backgroundColor: '#FFA000'
                                                     }
@@ -1467,7 +1508,6 @@ export default class RemoteComponent extends RemoteAccess {
                                                     color: '#FFFFFF',
                                                     minWidth: '48%',
                                                     width: '48%',
-                                                    marginTop: '-4px',
                                                     '&:hover': {
                                                         backgroundColor: '#D32F2F'
                                                     }
@@ -1486,17 +1526,17 @@ export default class RemoteComponent extends RemoteAccess {
                                 </Box>
                             )}
                         </Grid>
-                        <Box display="flex" justifyContent="center" alignItems="center" marginTop={2}>
+                        <Box display="flex" justifyContent="center" alignItems="center" marginBottom={1}>
                             <Button
                                 variant="contained"
                                 onClick={this.handlePreviousPage}
                                 disabled={!isPageInputActive && currentPage === 0}
                                 sx={{
-                                    backgroundColor: isPageInputActive ? '#F44336' : '#000000',
+                                    backgroundColor: isPageInputActive ? '#F44336' : '#1976d2',
                                     color: '#FFFFFF',
                                     marginRight: '10px',
                                     '&:hover': {
-                                        backgroundColor: isPageInputActive ? '#D32F2F' : '#333333'
+                                        backgroundColor: isPageInputActive ? '#D32F2F' : '#1b83e5'
                                     }
                                 }}
                             >
@@ -1527,11 +1567,11 @@ export default class RemoteComponent extends RemoteAccess {
                                     onClick={this.handlePageInputToggle}
                                     disabled={totalPages <= 1}
                                     sx={{
-                                        backgroundColor: totalPages <= 1 ? '#333333' : '#000000',
+                                        backgroundColor: totalPages <= 1 ? '#1b83e5' : '#1976d2',
                                         color: '#FFFFFF',
                                         height: '36px',
                                         '&:hover': {
-                                            backgroundColor: '#333333'
+                                            backgroundColor: '#1b83e5'
                                         }
                                     }}
                                 >
@@ -1543,11 +1583,11 @@ export default class RemoteComponent extends RemoteAccess {
                                 onClick={isPageInputActive ? this.handleJumpToPage : this.handleNextPage}
                                 disabled={!isPageInputActive && currentPage >= totalPages - 1}
                                 sx={{
-                                    backgroundColor: isPageInputActive ? '#2196F3' : '#000000',
+                                    backgroundColor: isPageInputActive ? '#2196F3' : '#1976d2',
                                     color: '#FFFFFF',
                                     marginLeft: '10px',
                                     '&:hover': {
-                                        backgroundColor: isPageInputActive ? '#1976D2' : '#333333'
+                                        backgroundColor: isPageInputActive ? '#1976D2' : '#1b83e5'
                                     }
                                 }}
                             >
