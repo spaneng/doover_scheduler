@@ -3,7 +3,7 @@ name = "doover-scheduler"
 authors = [{ name = "Doover Team", email = "developers@doover.com" }]
 description = "Python package for managing Doover scheduled tasks."
 readme = "README.md"
-version = "0.1.0"
+version = "0.1.1"
 requires-python = ">=3.11"
 keywords = ["doover-scheduler", "scheduler", "doover"]
 classifiers = [
