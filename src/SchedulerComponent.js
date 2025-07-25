@@ -64,6 +64,8 @@ export default class RemoteComponent extends RemoteAccess {
             editIndex: -1,
             deleteIndex: -1,
             editSchedule: null,
+            editScheduleIndex: -1,
+            editTimeslotIndex: -1,
             editScheduleName: '',
             startDate: new Date(),
             endDate: new Date(),
@@ -96,6 +98,7 @@ export default class RemoteComponent extends RemoteAccess {
             editError: "",
             hasModes: false,
             modeError: "",
+            durationError: "",
         };
         this.updateUiStates = this.updateUiStates.bind(this);
     }
@@ -124,7 +127,7 @@ export default class RemoteComponent extends RemoteAccess {
             return;
         }
     
-        this.setState({ open: false, startDateError: "", endDateError: "", modeError: '' });
+        this.setState({ open: false, startDateError: "", endDateError: "", modeError: '', durationError: '' });
     };
 
     extractModeParams = (mode) => {
@@ -144,9 +147,19 @@ export default class RemoteComponent extends RemoteAccess {
             const slot = sortedTimeSlots[index];
             if (slot) {
                 const scheduleObj = this.state.schedules.find(s => s.name === slot.scheduleName);
+                // Find the actual schedule index in the schedules array
+                const actualScheduleIndex = this.state.schedules.findIndex(s => s.name === slot.scheduleName);
+                // Find the actual timeslot index within that schedule's timeSlots array
+                const actualTimeslotIndex = actualScheduleIndex >= 0 ? 
+                    this.state.schedules[actualScheduleIndex].timeSlots.findIndex(ts => 
+                        ts.startTime.getTime() === slot.startTime.getTime()
+                    ) : -1;
+                
                 this.setState({
                     editOpen: true,
                     editIndex: index,
+                    editScheduleIndex: actualScheduleIndex,
+                    editTimeslotIndex: actualTimeslotIndex,
                     startDate: new Date(slot.startTime),
                     endDate: new Date(slot.startTime.getTime() + slot.duration * 3600 * 1000),
                     duration: slot.duration,
@@ -161,9 +174,14 @@ export default class RemoteComponent extends RemoteAccess {
         } else {  // 'Schedules' view
             const schedule = sortedSchedules[index];
             if (schedule) {
+                // Find the actual schedule index in the schedules array
+                const actualScheduleIndex = this.state.schedules.findIndex(s => s.name === schedule.name);
+                
                 this.setState({
                     editOpen: true,
                     editIndex: index,
+                    editScheduleIndex: actualScheduleIndex,
+                    editTimeslotIndex: null, // null when editing schedules
                     startDate: new Date(schedule.startTime),
                     endDate: new Date(schedule.endTime),
                     duration: schedule.duration,
@@ -183,7 +201,7 @@ export default class RemoteComponent extends RemoteAccess {
     };
 
     handleEditClose = () => {
-        this.setState({ editOpen: false, editError: "", modeError: "" });
+        this.setState({ editOpen: false, editError: "", modeError: "", durationError: "" });
     };
 
     handleDeleteOpen = (index) => {
@@ -397,6 +415,11 @@ export default class RemoteComponent extends RemoteAccess {
             this.setState({ modeError: "please select a mode" });
             return;
         }
+
+        if (duration <= 0) {
+            this.setState({ durationError: "Duration must be greater than Zero!" });
+            return;
+        }
     
         if (startDate < twentyFourHoursAgo) {
             this.setState({ startDateError: "Start date cannot be more than 24 hours in the past." });
@@ -408,7 +431,7 @@ export default class RemoteComponent extends RemoteAccess {
             return;
         }
     
-        this.setState({ startDateError: "", endDateError: "", modeError: "" });
+        this.setState({ startDateError: "", endDateError: "", modeError: "", durationError: "" });
     
         if (frequency === 'once') {
             const checkStart = startDate.getTime();
@@ -625,11 +648,21 @@ export default class RemoteComponent extends RemoteAccess {
     
         // this.setState({ editError: ""});
 
-        const { startDate, endDate, duration, editIndex, sortedTimeSlots, sortedSchedules, toggleView, editFrequency, selectedMode, modeParams, editScheduleName, modes } = this.state;
+        const { startDate, endDate, duration, editIndex, sortedTimeSlots, sortedSchedules, toggleView, editFrequency, selectedMode, modeParams, editScheduleName, modes, editScheduleIndex, editTimeslotIndex } = this.state;
+        
+        // You can now access the schedule and timeslot indices like this:
+        // const indices = [editScheduleIndex, editTimeslotIndex];
+        // editScheduleIndex = actual index in this.state.schedules array
+        // editTimeslotIndex = actual index in schedule.timeSlots array (or null for schedule edits)
         const modeObject = this.formatModeObject();
 
         if (modes.length > 0 && !selectedMode) {
             this.setState({ modeError: "please select a mode" });
+            return;
+        }
+
+        if (duration <= 0) {
+            this.setState({ durationError: "Duration must be greater than Zero!" });
             return;
         }
 
@@ -639,8 +672,13 @@ export default class RemoteComponent extends RemoteAccess {
             const checkEnd = checkStart + duration * 3600 * 1000;
             let valStart;
             let valEnd;
-            for (const valSched of this.state.schedules) {
-                for (const valSlot of valSched.timeSlots) {
+            for (const [scheduleIndex, valSched] of this.state.schedules.entries()) {
+                for (const [timeslotIndex, valSlot] of valSched.timeSlots.entries()) {
+                    // Skip the timeslot being edited to avoid self-conflict
+                    if (scheduleIndex === editScheduleIndex && timeslotIndex === editTimeslotIndex) {
+                        continue;
+                    }
+                    
                     valStart = valSlot.startTime.getTime();
                     valEnd = valStart + valSlot.duration * 3600 * 1000;
                     if ((checkStart <= valStart && checkEnd >= valStart)
@@ -652,7 +690,7 @@ export default class RemoteComponent extends RemoteAccess {
                 }
             }
 
-            this.setState({ editError: ""})
+            this.setState({ editError: "", durationError: "" })
 
             const timeSlot = sortedTimeSlots[editIndex];
             if (timeSlot) {
@@ -684,8 +722,9 @@ export default class RemoteComponent extends RemoteAccess {
                 let valEnd;
                 let checkStart = currentDate.getTime();
                 let checkEnd = checkStart + duration * 3600 * 1000;
-                for (const valSched of this.state.schedules) {
-                    if (valSched.name === editScheduleName) {
+                for (const [scheduleIndex, valSched] of this.state.schedules.entries()) {
+                    // Skip the schedule being edited to avoid self-conflict
+                    if (scheduleIndex === editScheduleIndex) {
                         continue;
                     }
                     for (const valSlot of valSched.timeSlots) {
@@ -706,7 +745,7 @@ export default class RemoteComponent extends RemoteAccess {
                 }
             }
 
-            this.setState({ editError: ""})
+            this.setState({ editError: "", durationError: "" })
 
             const scheduleToEdit = sortedSchedules[editIndex];
             if (scheduleToEdit) {
@@ -749,7 +788,7 @@ export default class RemoteComponent extends RemoteAccess {
                 });
             }
         }
-        this.setState({ modeError: '' });
+        this.setState({ modeError: '', durationError: '' });
     };
 
 
@@ -905,8 +944,6 @@ export default class RemoteComponent extends RemoteAccess {
                 modes: [],
                 schedules: []
             };
-
-            console.log("schedules", schedules);
             
             // Check if channel exists and has valid payload
             if (schedules && schedules.aggregate && schedules.aggregate.payload) {
@@ -1242,6 +1279,9 @@ export default class RemoteComponent extends RemoteAccess {
                                     sx={{ width: '100px', marginRight: '10px' }}
                                 />
                             </Box>
+                            {this.state.durationError && (
+                                <Typography color="error">{this.state.durationError}</Typography>
+                            )}
                         </FormControl>
                         <Box>
                             <FormControl component="fieldset" margin="normal" fullWidth>
@@ -1361,6 +1401,9 @@ export default class RemoteComponent extends RemoteAccess {
                                     endAdornment: <InputAdornment position="end">hrs</InputAdornment>,
                                 }}
                             />
+                            {this.state.durationError && (
+                                <Typography color="error">{this.state.durationError}</Typography>
+                            )}
                         </FormControl>
                         {this.renderModeSelection()}
                         {this.state.modeError && (
@@ -1491,8 +1534,8 @@ export default class RemoteComponent extends RemoteAccess {
                                                 sx={{
                                                     backgroundColor: '#FFC107',
                                                     color: '#FFFFFF',
-                                                    minWidth: '48%',
-                                                    width: '48%',
+                                                    minWidth: '46%',
+                                                    width: '46%',
                                                     '&:hover': {
                                                         backgroundColor: '#FFA000'
                                                     }
@@ -1506,8 +1549,8 @@ export default class RemoteComponent extends RemoteAccess {
                                                 sx={{
                                                     backgroundColor: '#F44336',
                                                     color: '#FFFFFF',
-                                                    minWidth: '48%',
-                                                    width: '48%',
+                                                    minWidth: '46%',
+                                                    width: '46%',
                                                     '&:hover': {
                                                         backgroundColor: '#D32F2F'
                                                     }
