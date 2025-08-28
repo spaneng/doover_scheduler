@@ -87,7 +87,7 @@ class MyApp(Application):
 
 ## Contributing
 
-For more information, please reach out to the maintainers at hello@doover.com
+For more information, please reach out to the maintainers at hello@doover.com 
 
 ## License
 
